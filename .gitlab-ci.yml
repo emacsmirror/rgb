@@ -1,0 +1,8 @@
+stages:
+  - test
+
+elisp-test:
+  image: silex/emacs
+  stage: test
+  script:
+    - bash run-tests.bash
