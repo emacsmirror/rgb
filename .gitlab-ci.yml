@@ -5,4 +5,5 @@ elisp-test:
   image: silex/emacs
   stage: test
   script:
+    - apt install -y openrgb
     - bash run-tests.bash
