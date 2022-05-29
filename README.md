@@ -10,3 +10,14 @@ A very simple shim script that allows interaction with devices via
 ;; Set device 1 to be red and in "Breathing" mode
 (rgb-set :device 1 :color "FF0000" :mode "Breathing")
 ```
+
+## Running tests
+You need to have these libraries installed:
+- [Emacs Lisp Expectations](https://www.emacswiki.org/emacs/EmacsLispExpectations)
+- [el-mock](https://github.com/rejeep/el-mock.el)
+
+Then:
+
+```
+bash run-tests.bash
+```
