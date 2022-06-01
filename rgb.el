@@ -32,13 +32,13 @@
 (defconst rgb-executable (executable-find "openrgb"))
 
 (cl-defun rgb-set (&key device color mode)
-	"Execute RGB set command on DEVICE with arguments for COLOR and MODE."
-	(let ((args (list)))
-		(if device (set 'args (append args (list "-d" (format "%d" device)))))
-		(if color (set 'args (append args (list "-c" (format "%s" color)))))
-		(if mode (set 'args (append args (list "-m" (format "%s" mode)))))
-		(apply 'start-process
-					 (append (list rgb-executable (format "*%s*" rgb-executable) rgb-executable)
-									 args))))
+  "Execute RGB set command on DEVICE with arguments for COLOR and MODE."
+  (let ((args (list)))
+    (if device (set 'args (append args (list "-d" (format "%d" device)))))
+    (if color (set 'args (append args (list "-c" (format "%s" color)))))
+    (if mode (set 'args (append args (list "-m" (format "%s" mode)))))
+    (apply 'start-process
+           (append (list rgb-executable (format "*%s*" rgb-executable) rgb-executable)
+                   args))))
 (provide 'rgb)
 ;;; rgb.el ends here
