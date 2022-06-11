@@ -1,4 +1,7 @@
-;;; rgb.el --- RGB control from Emacs.
+;;; rgb.el --- RGB control via OpenRGB
+;;; Version: 1.0.0
+;;; URL: https://gitlab.com/cwpitts/rgb.el
+;;; Package-Requires: ((emacs "24.3"))
 
 ;;; Copyright © 2022 Christopher Pitts <cwpitts@protonmail.com>
 ;;; Permission is hereby granted, free of charge, to any person
@@ -8,10 +11,8 @@
 ;;; modify, merge, publish, distribute, sublicense, and/or sell copies
 ;;; of the Software, and to permit persons to whom the Software is
 ;;; furnished to do so, subject to the following conditions:
-
 ;;; The above copyright notice and this permission notice shall be
 ;;; included in all copies or substantial portions of the Software.
-
 ;;; THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND,
 ;;; EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
 ;;; MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
