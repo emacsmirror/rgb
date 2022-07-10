@@ -1,5 +1,5 @@
 ;;; test-rgb.el --- Tests for rgb.el
-;;; Version: 1.0.0
+;;; Version: 2.0.0
 ;;; URL: https://gitlab.com/cwpitts/rgb.el
 ;;; Package-Requires: ((emacs "24.3") (el-mock "1.25.1") (ert-expectations "0.2"))
 
@@ -35,11 +35,11 @@
 (expectations
  (desc "Correct formatting of arguments")
  (expect (mock (start-process * * * "-d" "0" "-c" "FF0000") => nil)
-				 (rgb-set :color "FF0000" :device 0))
+         (rgb-set-openrgb :color "FF0000" :device 0))
  (expect (mock (start-process * * * "-d" "0" "-c" "FF0000" "-m" "Breathing") => nil)
-				 (rgb-set :color "FF0000" :device 0 :mode "Breathing"))
+         (rgb-set-openrgb :color "FF0000" :device 0 :mode "Breathing"))
  (expect (mock (start-process * * * "-c" "FF0000" "-m" "Breathing") => nil)
-				 (rgb-set :color "FF0000" :mode "Breathing")))
+         (rgb-set-openrgb :color "FF0000" :mode "Breathing")))
 
 (provide 'test-rgb)
 ;;; test-rgb.el ends here

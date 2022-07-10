@@ -1,5 +1,5 @@
 ;;; rgb.el --- RGB control via OpenRGB
-;;; Version: 1.0.0
+;;; Version: 2.0.0
 ;;; URL: https://gitlab.com/cwpitts/rgb.el
 ;;; Package-Requires: ((emacs "24.3"))
 
@@ -23,16 +23,25 @@
 ;;; DEALINGS IN THE SOFTWARE.
 
 ;;; Commentary:
-;;; This package uses the OpenRGB software to provide control of RGB devices
-;;; from within Emacs! It assumes that there's a usable OpenRGB installation
-;;; that can be found on the path.
+;;; This package uses RGB CLI tools to control RGB devices
+;;; from within Emacs. By default it uses the OpenRGB software,
+;;; assuming that there's a usable OpenRGB installation that can be
+;;; found on the path. Other supported backends can be added and configured
+;;; by changing the `rgb-mode-backend` variable.
 
 ;;; Code:
 (require 'cl-lib)
 
-(defconst rgb-executable (executable-find "openrgb"))
+(defvar rgb-executable (executable-find "openrgb"))
+(defvar rgb-device-ids (list))
+(defvar rgb-argmap (cl-pairlis '() '()))
+(defvar rgb-mode-backend "openrgb")
 
-(cl-defun rgb-set (&key device color mode)
+(defun rgb-set-rgb-from-mode (mode)
+  "Select RGB color backend and pass MODE to the backend function."
+  (funcall (intern (format "rgb-backend-%s" rgb-mode-backend)) mode))
+
+(cl-defun rgb-set-openrgb (&key device color mode)
   "Execute RGB set command on DEVICE with arguments for COLOR and MODE."
   (let ((args (list)))
     (if device (set 'args (append args (list "-d" (format "%d" device)))))
@@ -41,5 +50,24 @@
     (apply 'start-process
            (append (list rgb-executable (format "*%s*" rgb-executable) rgb-executable)
                    args))))
+
+(defun rgb-backend-openrgb (mode)
+  "Set RGB color based on current major mode MODE."
+  (let ((params (assoc-default mode rgb-argmap)))
+    (if params
+        (mapc (lambda (device-id)
+                (rgb-set-openrgb
+                 :device device-id
+                 :color (substring (assoc-default 'color params) 1)
+                 :mode (assoc-default 'mode params)))
+              rgb-device-ids))))
+
+;;###autoload
+(defun rgb-enable-mode-change-hook ()
+    "Enable RGB mode lights hook"
+  (add-hook 'window-buffer-change-functions
+            (lambda (window)
+              (rgb-set-rgb-from-mode major-mode))))
+
 (provide 'rgb)
 ;;; rgb.el ends here
