@@ -24,9 +24,9 @@
 
 ;;; Commentary:
 ;;; This package uses RGB CLI tools to control RGB devices
-;;; from within Emacs. By default it uses the OpenRGB software,
+;;; from within Emacs.  By default it uses the OpenRGB software,
 ;;; assuming that there's a usable OpenRGB installation that can be
-;;; found on the path. Other supported backends can be added and configured
+;;; found on the path.  Other supported backends can be added and configured
 ;;; by changing the `rgb-mode-backend` variable.
 
 ;;; Code:
@@ -64,7 +64,7 @@
 
 ;;###autoload
 (defun rgb-enable-mode-change-hook ()
-    "Enable RGB mode lights hook"
+    "Enable RGB mode lights hook."
   (add-hook 'window-buffer-change-functions
             (lambda (window)
               (rgb-set-rgb-from-mode major-mode))))

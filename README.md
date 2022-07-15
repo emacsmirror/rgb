@@ -1,6 +1,8 @@
 # rgb.el - RGB lighting for Emacs!
-A very simple shim script that allows interaction with devices via
-[OpenRGB](https://gitlab.com/CalcProgrammer1/OpenRGB).
+A very simple shim script that allows interaction with RGB
+devices. Default support is via
+[OpenRGB](https://gitlab.com/CalcProgrammer1/OpenRGB), but `rgb.el` is
+written to allow for extension and custom backends.
 
 ## Examples
 ### Direct RGB commands
@@ -73,6 +75,11 @@ Then:
 ```
 bash run-tests.bash
 ```
+
+## Selecting a different backend
+To select a different backend, set the `rgb-mode-backend` variable to
+a string that is the name of the backend. See next section for some
+caveats on how you have to enter the backend name.
 
 ## Adding a new backend
 To add a new backend, implement a function called `rgb-backend-<foo>`,
