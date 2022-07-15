@@ -12,6 +12,11 @@ A very simple shim script that allows interaction with devices via
 (rgb-set :device 1 :color "FF0000" :mode "Breathing")
 ```
 
+### Setting device list
+```elisp
+(setq rgb-device-ids (list 0))
+```
+
 ### Adding mode RGB configurations
 ```elisp
 ;; Individually
@@ -34,6 +39,28 @@ A very simple shim script that allows interaction with devices via
          ((color . "#FFA500") (mode . "Static")) ;; rust-mode
          ((color . "#FFC0CB") (mode . "Static")) ;; markdown-mode
          )))
+```
+
+### Example `use-package` configuration
+```elisp
+(use-package rgb
+  :demand
+  :init
+  (setq rgb-device-ids (list 0))
+  (setq rgb-argmap
+        (cl-pairlis
+         '(org-mode perl-mode python-mode emacs-lisp-mode rust-mode markdown-mode c-mode c++-mode)
+         '(((color . "#800080") (mode . "Static")) ;; org-mode
+           ((color . "#FF0000") (mode . "Strobe")) ;; perl-mode
+           ((color . "#FFFF00") (mode . "Static")) ;; python-mode
+           ((color . "#800080") (mode . "Static")) ;; emacs-lisp-mode
+           ((color . "#FFA500") (mode . "Static")) ;; rust-mode
+           ((color . "#FFC0CB") (mode . "Static")) ;; markdown-mode
+					 ((color . "#0000FF") (mode . "Static")) ;; c-mode
+					 ((color . "#0000FF") (mode . "Static")) ;; c++-mode
+           )))
+  :config
+  (rgb-enable-mode-change-hook))
 ```
 
 ## Running tests
