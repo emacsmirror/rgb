@@ -94,7 +94,7 @@
   :global t
   :lighter " RGB"
   :group 'rgb
-  (if (bound-and-true-p rgb-mode)
+  (if rgb-mode
       (add-hook 'window-buffer-change-functions
                 #'rgb-window-buffer-change-hook)
     (remove-hook 'window-buffer-change-functions
