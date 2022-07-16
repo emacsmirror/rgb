@@ -47,7 +47,7 @@
     (if device (set 'args (append args (list "-d" (format "%d" device)))))
     (if color (set 'args (append args (list "-c" (format "%s" color)))))
     (if mode (set 'args (append args (list "-m" (format "%s" mode)))))
-    (apply 'start-process
+    (apply #'start-process
            (append (list rgb-executable (format "*%s*" rgb-executable) rgb-executable)
                    args))))
 
@@ -62,7 +62,7 @@
                  :mode (assoc-default 'mode params)))
               rgb-device-ids))))
 
-;;###autoload
+;;;###autoload
 (defun rgb-enable-mode-change-hook ()
     "Enable RGB mode lights hook."
   (add-hook 'window-buffer-change-functions
