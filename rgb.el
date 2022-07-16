@@ -62,12 +62,23 @@
                  :mode (assoc-default 'mode params)))
               rgb-device-ids))))
 
+(defun rgb-window-buffer-change-hook (window)
+	"Hook for detecting buffer changes. WINDOW parameter not used."
+	;; We check for the global minor mode being enabled before calling
+	;; the RGB backend.
+	(if (bound-and-true-p global-rgb-mode)
+			(rgb-set-rgb-from-mode major-mode)))
+
+;; Hook is always added, but contains a check for the global minor
+;; mode being enabled before executing.
+(add-hook 'window-buffer-change-functions
+            #'rgb-window-buffer-change-hook)
+
 ;;;###autoload
-(defun rgb-enable-mode-change-hook ()
-    "Enable RGB mode lights hook."
-  (add-hook 'window-buffer-change-functions
-            (lambda (window)
-              (rgb-set-rgb-from-mode major-mode))))
+(define-minor-mode global-rgb-mode
+	"Global RGB mode."
+	:global t
+	:lighter " RGB")
 
 (provide 'rgb)
 ;;; rgb.el ends here
