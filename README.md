@@ -1,8 +1,13 @@
 # rgb.el - RGB lighting for Emacs!
-A very simple shim script that allows interaction with RGB
-devices. Default support is via
-[OpenRGB](https://gitlab.com/CalcProgrammer1/OpenRGB), but `rgb.el` is
-written to allow for extension and custom backends.
+A minor mode that allows interaction with RGB devices. Default support
+is via [OpenRGB](https://gitlab.com/CalcProgrammer1/OpenRGB), but
+`rgb.el` is written to allow for extension and custom backends.
+
+`rgb.el` has support for customization via `M-x customize RET`, and
+you may fint it easier to edit the mode-to-RGB-parameter mappings
+(`rgb-argmap`) there as opposed to writing it directly in Elisp
+(although a section below demonstrates doing just that with
+`cl-pairlis`).
 
 ## Examples
 ### Direct RGB commands
@@ -48,7 +53,7 @@ written to allow for extension and custom backends.
 (use-package rgb
   :demand
   :init
-  (setq rgb-device-ids (list 0))
+  (setq rgb-device-ids (list "0"))
   (setq rgb-argmap
         (cl-pairlis
          '(org-mode perl-mode python-mode emacs-lisp-mode rust-mode markdown-mode c-mode c++-mode)
@@ -58,11 +63,11 @@ written to allow for extension and custom backends.
            ((color . "#800080") (mode . "Static")) ;; emacs-lisp-mode
            ((color . "#FFA500") (mode . "Static")) ;; rust-mode
            ((color . "#FFC0CB") (mode . "Static")) ;; markdown-mode
-					 ((color . "#0000FF") (mode . "Static")) ;; c-mode
-					 ((color . "#0000FF") (mode . "Static")) ;; c++-mode
+           ((color . "#0000FF") (mode . "Static")) ;; c-mode
+           ((color . "#0000FF") (mode . "Static")) ;; c++-mode
            )))
-  :config
-  (rgb-enable-mode-change-hook))
+    :config
+    (rgb-mode))
 ```
 
 ## Running tests

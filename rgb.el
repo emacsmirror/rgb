@@ -32,10 +32,30 @@
 ;;; Code:
 (require 'cl-lib)
 
-(defvar rgb-executable (executable-find "openrgb"))
-(defvar rgb-device-ids (list))
-(defvar rgb-argmap (cl-pairlis '() '()))
-(defvar rgb-mode-backend "openrgb")
+(defgroup rgb nil
+  "Sync RGB devices with Emacs buffers."
+  :group 'external
+  :prefix "rgb-")
+
+(defcustom rgb-executable (executable-find "openrgb")
+  "Executable for controlling RGB hardware."
+  :group 'rgb
+  :type '(string))
+(defcustom rgb-device-ids (list)
+  "List of device IDs to control."
+  :group 'rgb
+  :type '(repeat string))
+(defcustom rgb-argmap (cl-pairlis '() '())
+  "Mapping of major modes to associated RGB setting parameters."
+  :group 'rgb
+  :type '(alist :key-type (symbol :tag "Major mode")
+                :value-type (alist :tag "Parameters"
+                                   :key-type (symbol :tag "Parameter")
+                                   :value-type (string :tag "Value"))))
+(defcustom rgb-mode-backend "openrgb"
+  "Backend to use for RGB control."
+  :group 'rgb
+  :type '(string))
 
 (defun rgb-set-rgb-from-mode (mode)
   "Select RGB color backend and pass MODE to the backend function."
@@ -44,11 +64,13 @@
 (cl-defun rgb-set-openrgb (&key device color mode)
   "Execute RGB set command on DEVICE with arguments for COLOR and MODE."
   (let ((args (list)))
-    (if device (set 'args (append args (list "-d" (format "%d" device)))))
+    (if device (set 'args (append args (list "-d" (format "%s" device)))))
     (if color (set 'args (append args (list "-c" (format "%s" color)))))
     (if mode (set 'args (append args (list "-m" (format "%s" mode)))))
     (apply #'start-process
-           (append (list rgb-executable (format "*%s*" rgb-executable) rgb-executable)
+           (append (list rgb-executable
+                         (format "*%s*" rgb-executable)
+                         rgb-executable)
                    args))))
 
 (defun rgb-backend-openrgb (mode)
@@ -63,22 +85,20 @@
               rgb-device-ids))))
 
 (defun rgb-window-buffer-change-hook (window)
-	"Hook for detecting buffer changes. WINDOW parameter not used."
-	;; We check for the global minor mode being enabled before calling
-	;; the RGB backend.
-	(if (bound-and-true-p global-rgb-mode)
-			(rgb-set-rgb-from-mode major-mode)))
-
-;; Hook is always added, but contains a check for the global minor
-;; mode being enabled before executing.
-(add-hook 'window-buffer-change-functions
-            #'rgb-window-buffer-change-hook)
+  "Hook for detecting buffer change.  WINDOW parameter not used."
+  (rgb-set-rgb-from-mode major-mode))
 
 ;;;###autoload
-(define-minor-mode global-rgb-mode
-	"Global RGB mode."
-	:global t
-	:lighter " RGB")
+(define-minor-mode rgb-mode
+  "Global RGB mode."
+  :global t
+  :lighter " RGB"
+  :group 'rgb
+  (if (bound-and-true-p global-rgb-mode)
+      (add-hook 'window-buffer-change-functions
+                #'rgb-window-buffer-change-hook)
+    (remove-hook 'window-buffer-change-functions
+                 #'rgb-window-buffer-change-hook)))
 
 (provide 'rgb)
 ;;; rgb.el ends here
