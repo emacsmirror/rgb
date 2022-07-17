@@ -37,9 +37,9 @@
  (expect (mock (start-process * * * "-d" "0" "-c" "FF0000") => nil)
          (rgb-set-openrgb :color "FF0000" :device 0))
  (expect (mock (start-process * * * "-d" "0" "-c" "FF0000" "-m" "Breathing") => nil)
-         (rgb-set-openrgb :color "FF0000" :device 0 :mode "Breathing"))
+         (rgb-set-openrgb :color "FF0000" :device 0 :light-mode "Breathing"))
  (expect (mock (start-process * * * "-c" "FF0000" "-m" "Breathing") => nil)
-         (rgb-set-openrgb :color "FF0000" :mode "Breathing")))
+         (rgb-set-openrgb :color "FF0000" :light-mode "Breathing")))
 
 (provide 'test-rgb)
 ;;; test-rgb.el ends here

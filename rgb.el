@@ -57,35 +57,36 @@
   :group 'rgb
   :type '(string))
 
-(defun rgb-set-rgb-from-mode (mode)
+(defun rgb-set-rgb-from-mode (current-major-mode)
   "Select RGB color backend and pass MODE to the backend function."
-  (funcall (intern (format "rgb-backend-%s" rgb-mode-backend)) mode))
+  (funcall
+	 (intern (format "rgb-backend-%s" rgb-mode-backend)) current-major-mode))
 
-(cl-defun rgb-set-openrgb (&key device color mode)
+(cl-defun rgb-set-openrgb (&key device color light-mode)
   "Execute RGB set command on DEVICE with arguments for COLOR and MODE."
   (let ((args (list)))
     (if device (set 'args (append args (list "-d" (format "%s" device)))))
     (if color (set 'args (append args (list "-c" (format "%s" color)))))
-    (if mode (set 'args (append args (list "-m" (format "%s" mode)))))
+    (if light-mode (set 'args (append args (list "-m" (format "%s" light-mode)))))
     (apply #'start-process
            (append (list rgb-executable
                          (format "*%s*" rgb-executable)
                          rgb-executable)
                    args))))
 
-(defun rgb-backend-openrgb (mode)
-  "Set RGB color based on current major mode MODE."
-  (let ((params (assoc-default mode rgb-argmap)))
+(defun rgb-backend-openrgb (current-major-mode)
+  "Set RGB color based on CURRENT-MAJOR-MODE."
+  (let ((params (assoc-default current-major-mode rgb-argmap)))
     (if params
         (mapc (lambda (device-id)
                 (rgb-set-openrgb
                  :device device-id
                  :color (substring (assoc-default 'color params) 1)
-                 :mode (assoc-default 'mode params)))
+                 :light-mode (assoc-default 'mode params)))
               rgb-device-ids))))
 
-(defun rgb-window-buffer-change-hook (window)
-  "Hook for detecting buffer change.  WINDOW parameter not used."
+(defun rgb-change-hook (_window)
+  "Hook for handling buffer/window change."
   (rgb-set-rgb-from-mode major-mode))
 
 ;;;###autoload
@@ -95,10 +96,8 @@
   :lighter " RGB"
   :group 'rgb
   (if rgb-mode
-      (add-hook 'window-buffer-change-functions
-                #'rgb-window-buffer-change-hook)
-    (remove-hook 'window-buffer-change-functions
-                 #'rgb-window-buffer-change-hook)))
+      (add-hook 'window-state-change-functions #'rgb-change-hook)
+    (remove-hook 'window-state-change-functions #'rgb-change-hook)))
 
 (provide 'rgb)
 ;;; rgb.el ends here
