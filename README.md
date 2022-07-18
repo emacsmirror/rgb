@@ -4,7 +4,7 @@ is via [OpenRGB](https://gitlab.com/CalcProgrammer1/OpenRGB), but
 `rgb.el` is written to allow for extension and custom backends.
 
 `rgb.el` has support for customization via `M-x customize RET`, and
-you may fint it easier to edit the mode-to-RGB-parameter mappings
+you may find it easier to edit the mode-to-RGB-parameter mappings
 (`rgb-argmap`) there as opposed to writing it directly in Elisp
 (although a section below demonstrates doing just that with
 `cl-pairlis`).
